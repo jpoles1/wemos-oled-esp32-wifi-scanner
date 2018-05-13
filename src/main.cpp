@@ -9,6 +9,17 @@
 
 SSD1306  display(0x3c, 5, 4);
 
+String wifiEncryptionToString(wifi_auth_mode_t ap_type) {
+  String x;
+  if(ap_type == WIFI_AUTH_OPEN) x="Open";
+  if(ap_type == WIFI_AUTH_WEP) x="WEP";
+  if(ap_type == WIFI_AUTH_WPA_PSK) x="WPA PSK";
+  if(ap_type == WIFI_AUTH_WPA2_PSK) x="WPA2 PSK";
+  if(ap_type == WIFI_AUTH_WPA_WPA2_PSK) x="WPA/WPA2 PSK";
+  if(ap_type == WIFI_AUTH_WPA2_ENTERPRISE) x="WPA2 Enterprise";
+  if(ap_type == WIFI_AUTH_MAX) x="MAX";
+  return x;
+}
 std::vector <std::string> splitString(std::string input, unsigned string_size = 10){
   std::vector <std::string> split_string;
   for (unsigned i = 0; i < input.length(); i += string_size) {
@@ -42,7 +53,7 @@ void displayString(std::string display_data, bool newline = true, bool clearScre
   }
   // Print to the screen
   if(newline){
-    delay(500);
+    delay(750);
   }
 }
 
@@ -96,14 +107,18 @@ void loop()
         std::vector <std::string> display_data;
         for (int i = 0; i < num_aps; i++) {
           ss.str("");
-          ss << i+1 << ": ";
+          ss << i+1 << "/" <<  num_aps << ": ";
           ss << WiFi.SSID(i).c_str() << " ";
-          ss << "(" << WiFi.RSSI(i) << "db)" ;
-          ss << String ((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? " - OPEN" : "").c_str();
+          display_data.push_back(ss.str());
+          ss.str("");
+          ss << " - (" << WiFi.RSSI(i) << "db)" ;
+          display_data.push_back(ss.str());
+          ss.str("");
+          ss << " - " << wifiEncryptionToString(WiFi.encryptionType(i)).c_str();
           display_data.push_back(ss.str());
         }
         displayStringVector(display_data);
     }
     // Wait a bit before scanning again
-    delay(5000);
+    delay(2500);
 }
