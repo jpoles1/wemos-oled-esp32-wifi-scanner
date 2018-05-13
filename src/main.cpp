@@ -75,31 +75,31 @@ void setup(){
     display.setContrast(255);
     display.setLogBuffer(5, 30);
 
-    displayString("Setup complete");
+    displayString("Setup Complete");
 }
 
 void loop()
 {
-    displayString("WiFi scan started...", true, true);
+    displayString("WiFi Scan Started...", true, true);
 
     // WiFi.scanNetworks will return the number of networks found
     int num_aps = WiFi.scanNetworks();
     delay(500);
-    displayString("Scan complete!");
+    displayString("Scan Complete!");
     displayString("--------------------");
     if (num_aps == 0) {
-        displayString("No networks found");
+        displayString("No Networks Found");
     } else {
         std::ostringstream ss;
-        ss << num_aps << " networks found:";
+        ss << num_aps << " Networks Found:";
         displayString(ss.str());
         std::vector <std::string> display_data;
         for (int i = 0; i < num_aps; i++) {
           ss.str("");
           ss << i+1 << ": ";
           ss << WiFi.SSID(i).c_str() << " ";
-          ss << "(" << WiFi.RSSI(i) << " db)" ;
-          ss << String ((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? " " : "*").c_str();
+          ss << "(" << WiFi.RSSI(i) << "db)" ;
+          ss << String ((WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? " - OPEN" : "").c_str();
           display_data.push_back(ss.str());
         }
         displayStringVector(display_data);
